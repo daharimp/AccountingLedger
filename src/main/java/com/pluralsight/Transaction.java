@@ -25,7 +25,7 @@ public class Transaction {
     }
 
     // ===== Getter and Setter Methods =====
-    // Methods used by other parts of the code
+    // Methods used by other parts of the code!
 
     public String getDate() {
         return date;
