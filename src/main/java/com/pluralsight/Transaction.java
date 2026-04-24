@@ -13,7 +13,7 @@ public class Transaction {
 
     // ===== CONSTRUCTOR =====
     // Creates a new Transaction with all required information.
-    // This is called by other code (like Ledger) when creating a new transaction!
+    // This is called by other code (like Ledger) when creating a new transaction!!
 
 
     public Transaction(String date, String time, String description, String vendor, double amount) {
