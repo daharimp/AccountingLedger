@@ -1,0 +1,72 @@
+package com.pluralsight;
+
+import java.io.*;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Scanner;
+
+/**
+ * Ledger.java
+ *
+ * The ledger is the "container" that controls all transactions.
+ * - Stores transactions in an ArrayList
+ * - Loads transactions from transactions.csv file
+ * - Saves transactions.csv file
+ * - Provides methods to filter and calculate on transactions.
+ *
+ *  This is how Transaction objects get used by the rest of the app.
+ */
+
+public class Ledger {
+    // ArrayList that hold transactions in memory.
+    private ArrayList<Transaction> transactions;
+
+
+    private static final String fileName = "transaction.csv";
+
+    // Constructor creates a new Ledger and loads all transactions on file
+
+    public Ledger() {
+        transactions = new ArrayList<>();
+    }
+    private void loadTransactions() {
+        File file = new File(fileName);
+
+        // If file does not exist, run program first
+
+        if (!file.exists()) {
+            return;
+        }
+
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
+                // Split by pipe character
+                String[] parts = line.split("\\|");
+
+                // Make sure we all 5 parts of Transaction are shown
+                if (parts.length  == 5) {
+                    String date = parts[0];
+                    String time = parts[1];
+                    String description = parts[2];
+                    String vendor = parts[3];
+                    double amount = Double.parseDouble(parts[4]);
+
+                    // Create a Transaction object and add to Array List
+
+                    Transaction tx = new Transaction(date, time, description, vendor, amount);
+
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + fileName);
+        }
+    }
+}
