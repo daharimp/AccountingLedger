@@ -5,15 +5,15 @@ import java.time.LocalTime;
 
 public class Transaction {
     // Create Fields for each Transaction class
-    private String date;
-    private String time;
-    private String description;
-    private String vendor;
-    private double amount;
+    private String date; // Format: yyyy-MM-dd
+    private String time; // Format: HH:mm:ss
+    private String description; // What the transaction was for
+    private String vendor; // Who/what company manufactured (Amazon, Apple, HP)
+    private double amount; // Positive for deposits, negative for payments
 
     // ===== CONSTRUCTOR =====
     // Creates a new Transaction with all required information.
-    // This is called by other code (like Ledger) when creating a new transaction!!
+    // This is called by other code (like Ledger) when creating a new transaction.
 
 
     public Transaction(String date, String time, String description, String vendor, double amount) {
@@ -25,6 +25,7 @@ public class Transaction {
     }
 
     // ===== Getter and Setter Methods =====
+
     // Methods used by other parts of the code!
 
     public String getDate() {
@@ -67,4 +68,39 @@ public class Transaction {
         this.amount = amount;
     }
 
+    // Helper Transaction Methods
+    // Checks if transaction is a payment
+    public boolean isPayment() {
+        return amount < 0;
+    }
+
+    // Checks if transaction is a deposit (money coming in)
+
+    public boolean isDeposit() {
+        return amount > 0;
+    }
+
+    // ==== Display Method ====
+    /**
+     * Returns a formatted string of a transaction
+     *
+     * Useful for:
+     * Displaying a single line
+     * Debugging
+     *
+     * Logging
+     * Example: "2026-04-26 | 4:20:35 | Amazon | Office Supplies | 95.60"
+     */
+
+    @Override
+    public String toString() {
+        return String.format("%s | %s | %s | %s | %.2f" ,
+                date, time, vendor, description, amount);
+    }
+    // CSV format for saving to transactions.csv
+    // (Description before vendor in CSV format
+
+    public String formatforCSV() {
+        return date + "|" + time + "|" + description + "|" + vendor + "|" + amount;
+    }
 }

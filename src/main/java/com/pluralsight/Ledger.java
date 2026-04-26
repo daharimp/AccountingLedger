@@ -32,6 +32,34 @@ public class Ledger {
     public Ledger() {
         transactions = new ArrayList<>();
     }
+    // === Methods ===
+
+    // Adds a new Transaction to the ledger AND saves to file
+    public void addTransaction(Transaction transaction) {
+        transactions.add(transaction);
+    }
+    // Returns ALL transactions starting from most recent transaction
+    // Ledger display (A) All option
+    public ArrayList<Transaction> getAllTransactions() {
+        // Sort newest first (reverse order)
+        ArrayList<Transaction> sorted = new ArrayList<>(transactions);
+        Collections.reverse(sorted);
+        return sorted;
+    }
+
+    // Method to return deposits ONLY (amount > 0).
+    // Ledger display (D) Deposits option
+    public ArrayList<Transaction> getDeposits() {
+        ArrayList<Transaction> deposits = new ArrayList<>();
+
+        // Loop through ALL transactions
+        for (Transaction tx : transactions) {
+
+        }
+
+       return deposits;
+    }
+
     private void loadTransactions() {
         File file = new File(fileName);
 
