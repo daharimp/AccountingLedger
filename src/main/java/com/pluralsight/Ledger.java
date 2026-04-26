@@ -54,10 +54,12 @@ public class Ledger {
 
         // Loop through ALL transactions
         for (Transaction tx : transactions) {
-
+            if (tx.isDeposit()) {
+                deposits.add(tx);
+            }
         }
-
-       return deposits;
+        Collections.reverse(deposits);
+        return deposits;
     }
 
     private void loadTransactions() {
