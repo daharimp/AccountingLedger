@@ -1,6 +1,7 @@
 package com.pluralsight;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
@@ -62,7 +63,7 @@ public class Ledger {
         return deposits;
     }
 
-    // Method for getting payments.
+    //==== Method for getting payments ====.
     /**
      *
      * Method that Returns only PAYMENT transactions.
@@ -84,6 +85,7 @@ public class Ledger {
         Collections.reverse(payments);
         return payments;
     }
+
     /**
      *Returns all transactions that match a vendor's name
      * Ledger display: (S) Search by vendor
@@ -104,43 +106,55 @@ public class Ledger {
     }
 
 
+    // ==== Report Methods ====
 
+    /**
+     * Month to Date Report
+     * Returns transactions from the first of the current month to the current day.
+     * Used by: Reports (1) Month to Date
+     */
 
-    private void loadTransactions() {
-        File file = new File(fileName);
+    public ArrayList<Transaction> getMonthToDateReport() {
+        ArrayList<Transaction> report = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+        LocalDate firstOfMonth = today.withDayOfMonth(1);
 
-        // If file does not exist, run program first
+        for (Transaction tx : transactions) {
+            LocalDate txDate = LocalDate.parse(tx.getDate());
 
-        if (!file.exists()) {
-            return;
-        }
-
-        try (Scanner scanner = new Scanner(file)) {
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-
-                if (line.trim().isEmpty()) {
-                    continue;
-                }
-                // Split by pipe character
-                String[] parts = line.split("\\|");
-
-                // Make sure we all 5 parts of Transaction are shown
-                if (parts.length  == 5) {
-                    String date = parts[0];
-                    String time = parts[1];
-                    String description = parts[2];
-                    String vendor = parts[3];
-                    double amount = Double.parseDouble(parts[4]);
-
-                    // Create a Transaction object and add to Array List
-
-                    Transaction tx = new Transaction(date, time, description, vendor, amount);
-
-                }
+            if (!txDate.isBefore(firstOfMonth) && !txDate.isAfter(today)) {
+                report.add(tx);
             }
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found: " + fileName);
         }
+        Collections.reverse(report);
+        return report;
     }
+
+    /**
+     * Previous Month Report:
+     * Returns all transactions from the previous calendar month.
+     * Used by: Reports (2) Previous Month
+     */
+    public ArrayList<Transaction> getPreviousMonthReport() {
+        ArrayList<Transaction> report = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+
+        // Now we go back on month:
+        YearMonth previousMonth = YearMonth.now().minusMonths(1);
+        LocalDate firstOfPrevMonth = previousMonth.atDay(1);
+        LocalDate lastOfPrevMonth = previousMonth.atEndOfMonth();
+
+        for (Transaction tx : transactions) {
+            LocalDate txDate = LocalDate.parse(tx.getDate());
+
+            if (!txDate.isBefore(firstOfPrevMonth) && !txDate.isAfter(lastOfPrevMonth)) {
+                report.add(tx);
+            }
+
+        }
+        Collections.reverse(report);
+        return report;
+    }
+
+
 }
