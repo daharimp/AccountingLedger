@@ -62,6 +62,50 @@ public class Ledger {
         return deposits;
     }
 
+    // Method for getting payments.
+    /**
+     *
+     * Method that Returns only PAYMENT transactions.
+     * Ledger display: (P) Payments option
+     *
+     */
+
+    public ArrayList<Transaction> getPayments() {
+        ArrayList<Transaction> payments = new ArrayList<>();
+
+        // Loop through all transactions
+        for (Transaction tx : transactions) {
+            if (tx.isPayment()) {
+                payments.add(tx);
+            }
+        }
+
+        // Sort newest first
+        Collections.reverse(payments);
+        return payments;
+    }
+    /**
+     *Returns all transactions that match a vendor's name
+     * Ledger display: (S) Search by vendor
+     */
+
+    public ArrayList<Transaction> searchByVendor(String vendorName) {
+        ArrayList<Transaction> results = new ArrayList<>();
+
+        // Loop through transactions again:
+        for (Transaction tx : transactions){
+            // Check if vendor returns the search term (not case sensitive).
+            if (tx.getVendor().toLowerCase().contains(vendorName.toLowerCase())){
+                results.add(tx);
+            }
+        }
+        Collections.reverse(results);
+        return results;
+    }
+
+
+
+
     private void loadTransactions() {
         File file = new File(fileName);
 
