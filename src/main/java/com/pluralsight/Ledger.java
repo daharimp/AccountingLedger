@@ -197,5 +197,103 @@ public class Ledger {
         return report;
     }
 
+    // ===== Methods for Calculation ====
+
+
+    /**
+     * getTotalIncome:
+     * Returns total for ALL DEPOSITS
+     * Used by: Reports to show total income
+     */
+
+    public double getTotalIncome() {
+        double total = 0;
+
+        for (Transaction tx : transactions) {
+            if (tx.isDeposit()) {
+                total += tx.getAmount(); // Make the return positive
+            }
+        }
+
+        return total;
+    }
+
+    /**
+     *
+     * getTotalExpense:
+     * Method to return ALL Payments (negative amounts shown as positive)
+     * Used by Reports: To show total payments made
+     */
+    public double getTotalExpenses() {
+        double total = 0;
+
+        for (Transaction tx : transactions) {
+            if (tx.isPayment()) {
+                total += Math.abs(tx.getAmount());
+            }
+        }
+        return total;
+    }
+    /**
+     *
+     * getNetIncome:
+     * Returns Income after factoring in Total Expenses (income - expenses)
+     * Used by Reports: to show NET income
+     */
+    public double getNetIncome() {
+        return (getTotalIncome() - getTotalExpenses());
+    }
+
+    /**
+     *
+     * getTotalIncomeFor:
+     * Returns total income for a specific list of transactions
+     * Used for Reports to show filtered transactions
+     */
+
+    public double getTotalIncomeFor(ArrayList<Transaction> txList) {
+        double total = 0;
+        for (Transaction tx : txList) {
+            if (tx.isDeposit()) {
+                total += tx.getAmount();
+            }
+        }
+        return total;
+    }
+
+    /**
+    * getTotalExpensesFor:
+    * Returns total expenses for a specific list of transactions
+    * Useful for Reports: showing filtered transactions
+    */
+
+    public double getTotalExpensesFor(ArrayList<Transaction> txList) {
+        double total = 0;
+        for (Transaction tx : txList) {
+            if (tx.isPayment()) {
+                total += Math.abs(tx.getAmount());
+            }
+        }
+        return total;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
