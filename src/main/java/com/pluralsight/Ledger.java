@@ -107,6 +107,8 @@ public class Ledger {
 
 
     // ==== Report Methods ====
+    // These are the methods to generate reports from the data.
+    // Methods are based on time ranges (ie, "Month to Date", "Previous Month" etc)
 
     /**
      * Month to Date Report
