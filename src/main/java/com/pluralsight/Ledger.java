@@ -133,7 +133,7 @@ public class Ledger {
     /**
      * Previous Month Report:
      * Returns all transactions from the previous calendar month.
-     * Used by: Reports (2) Previous Month
+     * Used by: Reports (2) Previous Month.
      */
     public ArrayList<Transaction> getPreviousMonthReport() {
         ArrayList<Transaction> report = new ArrayList<>();
