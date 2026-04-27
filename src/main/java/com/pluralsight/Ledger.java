@@ -155,6 +155,45 @@ public class Ledger {
         Collections.reverse(report);
         return report;
     }
+    public ArrayList<Transaction> getYearToDateReport() {
+        ArrayList<Transaction> report = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+        LocalDate firstOfYear = LocalDate.of(today.getYear(), 1, 1);
+
+        for (Transaction tx : transactions) {
+            LocalDate txDate = LocalDate.parse(tx.getDate());
+
+            if (!txDate.isBefore(firstOfYear) && !txDate.isAfter(today)) {
+                report.add(tx);
+            }
+        }
+        Collections.reverse(report);
+        return report;
+    }
+
+
+    /**
+     * Previous Year Report:
+     * Returns transactions from the 1st of the current Year (ex: Since 2026-01-01)
+     * Used by: Reports (4) Previous Year
+     */
+
+    public ArrayList<Transaction> getPreviousYearReport() {
+        ArrayList<Transaction> report = new ArrayList<>();
+        int previousYear = LocalDate.now().getYear() - 1;
+        LocalDate firstOfPrevYear = LocalDate.of(previousYear, 1, 1);
+        LocalDate lastOfPrevYear = LocalDate.of(previousYear, 12, 31);
+
+        for (Transaction tx : transactions) {
+            LocalDate txDate = LocalDate.parse(tx.getDate());
+
+            if (!txDate.isBefore(firstOfPrevYear) && !txDate.isAfter(lastOfPrevYear)) {
+                report.add(tx);
+            }
+        }
+        Collections.reverse(report);
+        return report;
+    }
 
 
 }
