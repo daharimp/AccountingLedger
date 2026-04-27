@@ -177,7 +177,7 @@ public class Ledger {
     /**
      * Previous Year Report:
      * Returns transactions from the 1st of the current Year (ex: Since 2026-01-01)
-     * Used by: Reports (4) Previous Year
+     * Used by: Reports (4) Previous Year.
      */
 
     public ArrayList<Transaction> getPreviousYearReport() {
