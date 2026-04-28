@@ -39,6 +39,7 @@ public class Ledger {
     public void addTransaction(Transaction transaction) {
         transactions.add(transaction);
     }
+
     // Returns ALL transactions starting from most recent transaction
     // Ledger display (A) All option
     public ArrayList<Transaction> getAllTransactions() {
@@ -64,6 +65,7 @@ public class Ledger {
     }
 
     //==== Method for getting payments ====.
+
     /**
      *
      * Method that Returns only PAYMENT transactions.
@@ -87,7 +89,7 @@ public class Ledger {
     }
 
     /**
-     *Returns all transactions that match a vendor's name
+     * Returns all transactions that match a vendor's name
      * Ledger display: (S) Search by vendor
      */
 
@@ -95,9 +97,9 @@ public class Ledger {
         ArrayList<Transaction> results = new ArrayList<>();
 
         // Loop through transactions again:
-        for (Transaction tx : transactions){
+        for (Transaction tx : transactions) {
             // Check if vendor returns the search term (not case sensitive).
-            if (tx.getVendor().toLowerCase().contains(vendorName.toLowerCase())){
+            if (tx.getVendor().toLowerCase().contains(vendorName.toLowerCase())) {
                 results.add(tx);
             }
         }
@@ -157,6 +159,7 @@ public class Ledger {
         Collections.reverse(report);
         return report;
     }
+
     public ArrayList<Transaction> getYearToDateReport() {
         ArrayList<Transaction> report = new ArrayList<>();
         LocalDate today = LocalDate.now();
@@ -234,6 +237,7 @@ public class Ledger {
         }
         return total;
     }
+
     /**
      *
      * getNetIncome:
@@ -262,10 +266,10 @@ public class Ledger {
     }
 
     /**
-    * getTotalExpensesFor:
-    * Returns total expenses for a specific list of transactions
-    * Useful for Reports: showing filtered transactions
-    */
+     * getTotalExpensesFor:
+     * Returns total expenses for a specific list of transactions
+     * Useful for Reports: showing filtered transactions
+     */
 
     public double getTotalExpensesFor(ArrayList<Transaction> txList) {
         double total = 0;
@@ -277,23 +281,62 @@ public class Ledger {
         return total;
     }
 
+    // ==== File I/O Methods ====
+
+    /**
+     * Loads all transactions from trasactions.csv file.
+     * Called automatically when Ledger is created.
+     * <p>
+     * Example Line: 2026-04-27|04:51:25|Lunch|-78.60
+     */
+    private void loadTransactions() {
+        File file = new File(fileName);
 
 
+        // If file doesn't exist yet (first run)
+        if (!file.exists()) {
+            return;
+        }
 
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
 
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
+                // Pipe character split
+                String[] parts = line.split("//|");
 
+                if (parts.length == 5) {
+                    String date = parts[0];
+                    String time = parts[1];
+                    String description = parts[2];
+                    String vendor = parts[3];
+                    double amount = Double.parseDouble(parts[4]);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + fileName);
+        }
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    /**
+     *
+     * saveTransaction():
+     * Saves all transactions to transactions.csv file
+     * Called every time a new transcaction is added.
+     *
+     * This overwrites the entire field with current transactions
+     */
+    private void saveTransactions() {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
+            for (Transaction tx : transactions) {
+                // Uses the formatForCSV() method from Trancaction!
+                writer.println(tx.formatforCSV());
+            }
+        } catch (IOException e) {
+            System.out.println("Error saving transactions: " + e.getMessage());
+        }
+    }
 }
