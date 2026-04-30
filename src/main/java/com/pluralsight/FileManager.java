@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 // ==== File I/O Methods ====
 public class FileManager {
-    private static String fileName = "transactions.csv";
+    private static final String fileName = "transactions.csv";
 
     /**
      * Loads all transactions from trasactions.csv file.
@@ -69,7 +69,7 @@ public class FileManager {
     private static Transaction parseTransactionFrom(String line) {
         // Pipe character split
         try {
-            String[] parts = line.split("//|");
+            String[] parts = line.split("\\|");
 
             if (parts.length != 5) {
                 System.out.println("Warning: Invalid transaction line: " + line);

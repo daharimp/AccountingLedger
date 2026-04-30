@@ -66,6 +66,8 @@ public class AccountingLedgerApp {
                     break;
                 case "X":
                     System.out.println("\nThank you for using MassWALLET Accounting. Goodbye");
+                    running = false;
+                    break;
                 default:
                     System.out.println("Invalid option. Please try again.\n");
                 }
@@ -99,7 +101,7 @@ public class AccountingLedgerApp {
                     displayPaymentsOnly();
                     break;
                 case "R":
-
+                    reportScreen();
                     break;
                 case "H":
                     inLedger = false; // Returns to home
@@ -109,6 +111,16 @@ public class AccountingLedgerApp {
             }
         }
     }
+    // ===== REPORTS SCREEN =====
+    /**
+     * Reports Options:
+     * 1) Month to Date
+     * 2) Previous Month
+     * 3) Year to Date
+     * 4) Previous Year
+     * 5) Search by vendor
+     * 0) Back
+     */
     private static void reportScreen() {
        boolean inReports = true;
        while (inReports) {
@@ -161,13 +173,13 @@ public class AccountingLedgerApp {
         }
 
         // Header w/ format
-        System.out.printf("%-12s | %-10s | %-20s | %-15s | %10s", // Header format with space alignment
+        System.out.printf("%-12s | %-10s | %-20s | %-15s | %10s\n", // Header format with space alignment
                 "Date", "Time", "Description", "Vendor", "Amount");
         System.out.println("-----------------------------------------------------");
 
         // Transaction loop
         for (Transaction tx : transactions) {
-            System.out.printf("%-12s | %-10s | %-20s | %-15s | $%10.2f",
+            System.out.printf("%-12s | %-10s | %-20s | %-15s | $%10.2f\n",
                     tx.getDate(),
                     tx.getTime(),
                     tx.getDescription(),
@@ -191,14 +203,14 @@ public class AccountingLedgerApp {
             System.out.println("No deposits found\n");
             return;
         }
-        System.out.printf("%-12s | %-10s | %-20s | %-15s | %10s",
+        System.out.printf("%-12s | %-10s | %-20s | %-15s | %10s\n",
                 "Date", "Time", "Description", "Vendor", "Amount");
         System.out.println("-----------------------------------------------------");
 
         // Transaction loop
         double total = 0;
         for (Transaction tx : deposits) {
-            System.out.printf("%-12s | %-10s | %-20s | %-15s | $%10.2f",
+            System.out.printf("%-12s | %-10s | %-20s | %-15s | $%10.2f\n",
                     tx.getDate(),
                     tx.getTime(),
                     tx.getDescription(),
@@ -223,7 +235,7 @@ public class AccountingLedgerApp {
             System.out.println("No payments found\n");
             return;
         }
-        System.out.printf("%-12s | %-10s | %-20s | %-15s | %10s",
+        System.out.printf("%-12s | %-10s | %-20s | %-15s | %10s\n",
                 "Date", "Time", "Description", "Vendor", "Amount");
         System.out.println("-----------------------------------------------------");
 
@@ -231,7 +243,7 @@ public class AccountingLedgerApp {
         double total = 0;
         for (Transaction tx : payments) {
             double txDisplayAmount = Math.abs(tx.getAmount());
-            System.out.printf("%-12s | %-10s | %-20s | %-15s | $%10.2f",
+            System.out.printf("%-12s | %-10s | %-20s | %-15s | $%10.2f\n",
                     tx.getDate(),
                     tx.getTime(),
                     tx.getDescription(),
@@ -243,21 +255,6 @@ public class AccountingLedgerApp {
         System.out.println("-----------------------------------------------------");
         System.out.printf("Total Payments: $%.2f\n", total);
     }
-
-    // ===== REPORTS SCREEN =====
-    /**
-     * Reports Options:
-     * 1) Month to Date
-     * 2) Previous Month
-     * 3) Year to Date
-     * 4) Previous Year
-     * 5) Search by vendor
-     * 0) Back
-     */
-    private static void reportsScreen() {
-        boolean inReports = true;
-    }
-
     // ===== REPORTS DISPLAY METHODS =====
     /**
      * Month to Date Report:
@@ -324,12 +321,12 @@ public class AccountingLedgerApp {
             System.out.println("No transactions in this period.\n");
             return;
         }
-        System.out.printf("%-12s | %-10s | %-20s | %-15s | %10s",
+        System.out.printf("%-12s | %-10s | %-20s | %-15s | %10s\n",
                 "Date", "Time", "Description", "Vendor", "Amount");
         System.out.println("-----------------------------------------------------");
 
         for (Transaction tx : transactions) {
-            System.out.printf("%-12s | %-10s | %-20s | %-15s | $%10.2f",
+            System.out.printf("%-12s | %-10s | %-20s | %-15s | $%10.2f\n",
                     tx.getDate(),
                     tx.getTime(),
                     tx.getDescription(),
@@ -339,8 +336,8 @@ public class AccountingLedgerApp {
         // Print The Summary
         System.out.println("-----------------------------------------------------");
         System.out.printf("Total Income: $%5.2f", income);
-        System.out.printf("Total Expenses: $%5.2f", expenses);
-        System.out.println("----------");
+        System.out.printf("\nTotal Expenses: $%5.2f", expenses);
+        System.out.println("\n----------");
         System.out.printf("Net Income: $%5.2f\n", net);
     }
 
