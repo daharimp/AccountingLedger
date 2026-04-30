@@ -223,7 +223,6 @@ public class Ledger {
     }
 
     /**
-     *
      * getTotalExpense:
      * Method to return ALL Payments (negative amounts shown as positive)
      * Used by Reports: To show total payments made
