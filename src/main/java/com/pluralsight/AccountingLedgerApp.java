@@ -22,21 +22,25 @@ import java.time.LocalTime;
 
 public class AccountingLedgerApp {
 
-    // Creating Ledger used for the entire Main application
+    // Creates ledger used for the entire Main application
     private static Ledger ledger;
 
-    // Create ONE Scanner for ALL user input
+    // Scanner for all user input
     private static Scanner scanner;
 
     public static void main(String[] args) {
         ledger = new Ledger(); // Initialize the ledger (automatically loads transactions from file)
         scanner = new Scanner(System.in); // Start scanner for user input
 
-        // Display welcome message
+        // Welcome message display
         displayWelcome();
 
+        // Home Screen (Main Menu)
+        homeScreen();
+
+        // Scanner needs to be closed when done
+        scanner.close();
     }
-    // Home Screen (Main Menu)
 
     /**
      * Home Screen: Shows main menu options
@@ -67,11 +71,154 @@ public class AccountingLedgerApp {
                 }
         }
     }
-    // ===== ADD DEPOSIT =====
-    // Asks for date, time, description, vendor, amount.
-    // Creates Transaction object and adds to Ledger
-    // Returns Home
+    //===== Ledger Screen =====
+    /**
+     * Options:
+     * A) All Transactions
+     * D) Deposits
+     * P) Payments
+     * R) Reports
+     * H) Home
+     *
+     */
+    private static void ledgerScreen() {
+        boolean inLedger = true;
 
+        while (inLedger) {
+            displayLedgerMenu();
+            String choice = scanner.nextLine().toUpperCase();
+
+            switch (choice) {
+                case "A":
+                    // displayAllTransactions method
+                    break;
+                case "D":
+                    // displayDeposits method
+                    break;
+                case "P":
+                    // displayPayments method
+                    break;
+                case "R":
+                    // reportsScreen method
+                    break;
+                case "H":
+                    inLedger = false; // Returns to home
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again\n");
+            }
+        }
+    }
+
+    //===== LEDGER DISPLAY METHODS =====
+
+    /**
+     * Display all transactions (sorted by most recent):
+     * 1. ledger.getAllTransactions returns an ArrayList of transactions
+     * 2. Loops through each transaction
+     * 3. Prints in a formatted table
+     * 4. Shows total amount of transactions
+     */
+    private static void displayAllTransactions() {
+        ArrayList<Transaction> transactions = ledger.getAllTransactions();
+
+        System.out.println("\n===== Ledger - All Transactions =====");
+
+        if (transactions.isEmpty()) {
+            System.out.println("No transactions found\n");
+            return;
+        }
+
+        // Header w/ format
+        System.out.printf("%-12s | %-10s | %-20s | %-15s | %10s", // Header format with space alignment
+                "Date", "Time", "Description", "Vendor", "Amount");
+        System.out.println("-----------------------------------------------------");
+
+        // Transaction loop
+        for (Transaction tx : transactions) {
+            System.out.printf("%-12s | %-10s | %-20s | %-15s | $%10.2f",
+                    tx.getDate(),
+                    tx.getTime(),
+                    tx.getDescription(),
+                    tx.getVendor(),
+                    tx.getAmount());
+        }
+
+        System.out.println("-----------------------------------------------------");
+        System.out.println("Total: " + transactions.size() + " transaction\n");
+    }
+
+    /**
+     * Method to display ONLY DEPOSITS (positive amounts)
+     */
+    private static void displayDepositsOnly() {
+        ArrayList<Transaction> deposits = ledger.getDeposits();
+
+        System.out.println("\n===== LEDGER - DEPOSITS =====");
+
+        if (deposits.isEmpty()) {
+            System.out.println("No deposits found\n");
+            return;
+        }
+        System.out.printf("%-12s | %-10s | %-20s | %-15s | %10s",
+                "Date", "Time", "Description", "Vendor", "Amount");
+        System.out.println("-----------------------------------------------------");
+
+        // Transaction loop
+        double total = 0;
+        for (Transaction tx : deposits) {
+            System.out.printf("%-12s | %-10s | %-20s | %-15s | $%10.2f",
+                    tx.getDate(),
+                    tx.getTime(),
+                    tx.getDescription(),
+                    tx.getVendor(),
+                    tx.getAmount());
+            total += tx.getAmount();
+        }
+
+        System.out.println("-----------------------------------------------------");
+        System.out.printf("Total Deposits: $%.2f\n", total);
+    }
+
+    /**
+     * Display ONLY PAYMENTS (negative amounts)
+     */
+    private static void displayPaymentsOnly() {
+        ArrayList<Transaction> payments = ledger.getPayments();
+
+        System.out.println("\n===== LEDGER - PAYMENTS =====");
+
+        if (payments.isEmpty()) {
+            System.out.println("No payments found\n");
+            return;
+        }
+        System.out.printf("%-12s | %-10s | %-20s | %-15s | %10s",
+                "Date", "Time", "Description", "Vendor", "Amount");
+        System.out.println("-----------------------------------------------------");
+
+        // Transaction loop
+        double total = 0;
+        for (Transaction tx : payments) {
+            double txDisplayAmount = Math.abs(tx.getAmount());
+            System.out.printf("%-12s | %-10s | %-20s | %-15s | $%10.2f",
+                    tx.getDate(),
+                    tx.getTime(),
+                    tx.getDescription(),
+                    tx.getVendor(),
+                    txDisplayAmount);
+            total += txDisplayAmount;
+        }
+
+        System.out.println("-----------------------------------------------------");
+        System.out.printf("Total Payments: $%.2f\n", total);
+    }
+
+    // ===== ADD DEPOSIT =====
+    /**
+    // Asks for date, time, description, vendor, amount.
+    * Creates Transaction object and adds to Ledger
+    * Returns Home
+    */
     private static void addDeposit() {
         System.out.println("\n===== ADD DEPOSIT =====");
 
@@ -116,10 +263,10 @@ public class AccountingLedgerApp {
     }
 
     // ===== ADD PAYMENT =====
-    // Asks for date, time, description, vendor, amount.
-    // Creates Transaction object and adds to Ledger
-    // Same method creation as deposit but amount is stored as NEGATIVE
-
+    /** Asks for date, time, description, vendor, amount.
+    * Creates Transaction object and adds to Ledger
+    * Same method creation as deposit but amount is stored as NEGATIVE
+    */
     private static void addPayment() {
         System.out.println("\n===== ADD PAYMENT =====");
 
