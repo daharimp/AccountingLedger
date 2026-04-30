@@ -62,7 +62,7 @@ public class AccountingLedgerApp {
                     addPayment();
                     break;
                 case "L":
-                     // Create ledgerScreen method
+                     ledgerScreen();
                     break;
                 case "X":
                     System.out.println("\nThank you for using MassWALLET Accounting. Goodbye");
@@ -90,16 +90,16 @@ public class AccountingLedgerApp {
 
             switch (choice) {
                 case "A":
-                    // displayAllTransactions method
+                    displayAllTransactions();
                     break;
                 case "D":
-                    // displayDeposits method
+                    displayDepositsOnly();
                     break;
                 case "P":
-                    // displayPayments method
+                    displayPaymentsOnly();
                     break;
                 case "R":
-                    // reportsScreen method
+
                     break;
                 case "H":
                     inLedger = false; // Returns to home
@@ -108,6 +108,37 @@ public class AccountingLedgerApp {
                     System.out.println("Invalid choice. Please try again\n");
             }
         }
+    }
+    private static void reportScreen() {
+       boolean inReports = true;
+       while (inReports) {
+
+           displayReportsMenu();
+           String choice = scanner.nextLine();
+
+           switch (choice) {
+               case "1":
+                   showMonthToDateReport();
+                   break;
+               case "2":
+                   showPreviousMonthReport();
+                   break;
+               case "3":
+                   showYearToDateReport();
+                   break;
+               case "4":
+                   showPreviousYearReport();
+                   break;
+               case "5":
+                   System.out.println("Search by Vendor screen");
+                   break;
+               case "0":
+                   inReports = false;
+                   break;
+               default:
+                   System.out.println("Invalid choice. Try Again.\n");
+           }
+       }
     }
 
     //===== LEDGER DISPLAY METHODS =====
@@ -211,6 +242,106 @@ public class AccountingLedgerApp {
 
         System.out.println("-----------------------------------------------------");
         System.out.printf("Total Payments: $%.2f\n", total);
+    }
+
+    // ===== REPORTS SCREEN =====
+    /**
+     * Reports Options:
+     * 1) Month to Date
+     * 2) Previous Month
+     * 3) Year to Date
+     * 4) Previous Year
+     * 5) Search by vendor
+     * 0) Back
+     */
+    private static void reportsScreen() {
+        boolean inReports = true;
+    }
+
+    // ===== REPORTS DISPLAY METHODS =====
+    /**
+     * Month to Date Report:
+     * Shows transactions from 1st of the current month to today
+     * Calculates: Income, Expense & Net Income
+     */
+    private static void showMonthToDateReport() {
+        ArrayList<Transaction> transactions = ledger.getMonthToDateReport();
+        double income = ledger.getTotalIncomeFor(transactions);
+        double expenses = ledger.getTotalExpensesFor(transactions);
+        double net = income - expenses;
+
+        displayFinancialReport("MONTH TO DATE REPORT:", transactions, income, expenses, net);
+    }
+
+    /**
+     * Previous Month Report:
+     * Shows all transaction from the prior month
+     */
+    private static void showPreviousMonthReport() {
+        ArrayList<Transaction> transactions = ledger.getPreviousMonthReport();
+        double income = ledger.getTotalIncomeFor(transactions);
+        double expenses = ledger.getTotalExpensesFor(transactions);
+        double net = income - expenses;
+
+        displayFinancialReport("PREVIOUS MONTH REPORT:", transactions, income, expenses, net);
+    }
+
+    /**
+     * Year to Date Report:
+     * Shows transactions from Jan 1 of the current year to today
+     */
+    private static void showYearToDateReport() {
+        ArrayList<Transaction> transactions = ledger.getYearToDateReport();
+        double income = ledger.getTotalIncomeFor(transactions);
+        double expenses = ledger.getTotalExpensesFor(transactions);
+        double net = income - expenses;
+
+        displayFinancialReport("YEAR TO DATE REPORT:", transactions, income, expenses, net);
+    }
+
+    /**
+     * Previous Year Report
+     * Shows transactions for the entire previous year
+     */
+    private static void showPreviousYearReport() {
+        ArrayList<Transaction> transactions = ledger.getPreviousYearReport();
+        double income = ledger.getTotalIncomeFor(transactions);
+        double expenses = ledger.getTotalExpensesFor(transactions);
+        double net = income - expenses;
+
+        displayFinancialReport("PREVIOUS YEAR REPORT:", transactions, income, expenses, net);
+    }
+
+
+    // ====== DISPLAY FINANCIAL REPORT HELPER =====
+
+
+    private static void displayFinancialReport(String reportTitle, ArrayList<Transaction> transactions, double income,
+                                               double expenses, double net) {
+        System.out.println("\n===== " + reportTitle + " =====");
+
+        if (transactions.isEmpty()) {
+            System.out.println("No transactions in this period.\n");
+            return;
+        }
+        System.out.printf("%-12s | %-10s | %-20s | %-15s | %10s",
+                "Date", "Time", "Description", "Vendor", "Amount");
+        System.out.println("-----------------------------------------------------");
+
+        for (Transaction tx : transactions) {
+            System.out.printf("%-12s | %-10s | %-20s | %-15s | $%10.2f",
+                    tx.getDate(),
+                    tx.getTime(),
+                    tx.getDescription(),
+                    tx.getVendor(),
+                    tx.getAmount());
+        }
+        // Print The Summary
+        System.out.println("-----------------------------------------------------");
+        System.out.printf("Total Income: $%5.2f", income);
+        System.out.printf("Total Expenses: $%5.2f", expenses);
+        System.out.println("----------");
+        System.out.printf("Net Income: $%5.2f\n", net);
     }
 
     // ===== ADD DEPOSIT =====
@@ -325,7 +456,7 @@ public class AccountingLedgerApp {
         System.out.println("P) Make Payment");
         System.out.println("L) Ledger");
         System.out.println("X) Exit");
-        System.out.println("\nEnter Option:");
+        System.out.println("\nEnter Option: ");
     }
 
     private static void displayLedgerMenu() {
@@ -336,7 +467,18 @@ public class AccountingLedgerApp {
         System.out.println("P) Payments");
         System.out.println("R) Reports");
         System.out.println("H) Home");
-        System.out.println("\nEnter Option:");
+        System.out.println("\nEnter Option: ");
+    }
+    private static void displayReportsMenu() {
+        System.out.println("\nReports");
+        System.out.println("-----------");
+        System.out.println("1) Month to Date");
+        System.out.println("2) Previous Month");
+        System.out.println("3) Year to Date");
+        System.out.println("4) Previous Year");
+        System.out.println("5) Search by Vendor");
+        System.out.println("0) Back");
+        System.out.println("\nEnter Option: ");
     }
 
     //===== INPUT VAlIDATION METHODS =====

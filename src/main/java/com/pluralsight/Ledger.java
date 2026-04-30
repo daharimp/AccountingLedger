@@ -25,19 +25,20 @@ public class Ledger {
     // ArrayList that hold transactions in memory.
     private ArrayList<Transaction> transactions;
 
-
-    private static final String fileName = "transaction.csv";
-
     // Constructor creates a new Ledger and loads all transactions on file
 
+
     public Ledger() {
-        transactions = new ArrayList<>();
+        transactions = FileManager.loadTransactions();
+
     }
     // === Methods ===
 
     // Adds a new Transaction to the ledger AND saves to file
     public void addTransaction(Transaction transaction) {
         transactions.add(transaction);
+        // Ask File Manager to save the transactions
+        FileManager.saveTransactions(transactions);
     }
 
     // Returns ALL transactions starting from most recent transaction
@@ -279,64 +280,5 @@ public class Ledger {
             }
         }
         return total;
-    }
-
-    // ==== File I/O Methods ====
-
-    /**
-     * Loads all transactions from trasactions.csv file.
-     * Called automatically when Ledger is created.
-     * <p>
-     * Example Line: 2026-04-27|04:51:25|Lunch|-78.60
-     */
-    private void loadTransactions() {
-        File file = new File(fileName);
-
-
-        // If file doesn't exist yet (first run)
-        if (!file.exists()) {
-            return;
-        }
-
-        try (Scanner scanner = new Scanner(file)) {
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-
-                if (line.trim().isEmpty()) {
-                    continue;
-                }
-                // Pipe character split
-                String[] parts = line.split("//|");
-
-                if (parts.length == 5) {
-                    String date = parts[0];
-                    String time = parts[1];
-                    String description = parts[2];
-                    String vendor = parts[3];
-                    double amount = Double.parseDouble(parts[4]);
-                }
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found: " + fileName);
-        }
-    }
-
-    /**
-     *
-     * saveTransaction():
-     * Saves all transactions to transactions.csv file
-     * Called every time a new transcaction is added.
-     *
-     * This overwrites the entire field with current transactions
-     */
-    private void saveTransactions() {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
-            for (Transaction tx : transactions) {
-                // Uses the formatForCSV() method from Trancaction!
-                writer.println(tx.formatforCSV());
-            }
-        } catch (IOException e) {
-            System.out.println("Error saving transactions: " + e.getMessage());
-        }
     }
 }
