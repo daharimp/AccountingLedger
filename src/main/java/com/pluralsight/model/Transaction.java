@@ -1,7 +1,4 @@
-package com.pluralsight;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
+package com.pluralsight.model;
 
 public class Transaction {
     // Create Fields for each Transaction class
